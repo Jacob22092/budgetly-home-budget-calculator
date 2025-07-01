@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Home Budget Calculator | Budgetly</title>
+  <link rel="icon" href="https://img.icons8.com/cotton/64/money-bag.png"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+  <header>
+    <div class="branding">
+      <img src="https://img.icons8.com/cotton/64/money-bag.png" alt="Budgetly" class="brand-icon" />
+      <span class="brand-name">Budgetly</span>
+    </div>
+    <h1>Home Budget Calculator</h1>
+    <div style="display:flex;align-items:center;">
+      <button id="settingsBtn" title="Settings" style="margin-right:12px;font-size:1.8rem;background:none;border:none;cursor:pointer;">⚙️</button>
+      <button id="themeToggle" title="Switch theme"></button>
+    </div>
+  </header>
+  <main>
+    <div id="limitPopup" class="limit-popup"></div>
+    <section id="add-entry">
+      <h2>Add Entry</h2>
+      <form id="entryForm" autocomplete="off">
+        <input type="date" id="date" required>
+        <input type="text" id="desc" placeholder="Description (e.g. Groceries)" maxlength="32" required>
+        <input type="number" id="amount" placeholder="Amount (e.g. 120.50)" step="0.01" required>
+        <span id="quick-insert" title="Insert last amount"></span>
+        <select id="category" required>
+          <option value="" disabled selected>Category</option>
+        </select>
+        <span id="quick-insert-cat" title="Insert last category"></span>
+        <select id="type" required>
+          <option value="income">Income</option>
+          <option value="expense">Expense</option>
+        </select>
+        <input type="text" id="note" placeholder="Note (optional)" maxlength="64">
+        <button type="submit" class="ripple-btn">Add</button>
+      </form>
+      <div id="shortcut-hint" style="font-size:0.99rem;color:#888;margin-top:8px;">
+        <b>Enter</b> – add entry, <b>Esc</b> – cancel edit
+      </div>
+    </section>
+    <section id="summary">
+      <h2>Summary</h2>
+      <div class="summary-grid">
+        <div>
+          <span>Balance</span>
+          <strong id="balance">0 zł</strong>
+        </div>
+        <div>
+          <span>Income</span>
+          <strong id="incomes">0 zł</strong>
+        </div>
+        <div>
+          <span>Expenses</span>
+          <strong id="expenses">0 zł</strong>
+        </div>
+      </div>
+      <div id="mainChart" class="chart-container"></div>
+    </section>
+    <section id="history">
+      <h2>History</h2>
+      <div class="history-controls">
+        <input type="text" id="search" placeholder="Search description or note..." />
+        <select id="filterCat"></select>
+        <select id="filterType">
+          <option value="">All</option>
+          <option value="income">Income</option>
+          <option value="expense">Expense</option>
+        </select>
+        <button id="exportBtn" class="ripple-btn">Export</button>
+        <button id="importBtn" class="ripple-btn">Import</button>
+        <input type="file" id="importFile" accept="application/json" style="display:none"/>
+      </div>
+      <table id="entryTable">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Description</th>
+            <th>Category</th>
+            <th>Type</th>
+            <th>Amount</th>
+            <th>Note</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+    </section>
+    <section id="stats">
+      <h2>Statistics</h2>
+      <div class="charts-row">
+        <div>
+          <h3>Expenses by Category</h3>
+          <div id="pieChart" class="chart-container"></div>
+        </div>
+        <div>
+          <h3>Monthly Balance</h3>
+          <div id="barChart" class="chart-container"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer>
+    <span>© 2025 <span class="brand-name">Budgetly</span> | Personal Finance App by Jacob22092</span>
+    <a href="https://github.com/Jacob22092" target="_blank">GitHub</a>
+  </footer>
+  <!-- MODAL SETTINGS -->
+  <div id="settingsModal" class="modal">
+    <div class="modal-content">
+      <button class="close-btn" id="closeSettings">&times;</button>
+      <section id="settings">
+        <h2>Settings</h2>
+        <div class="settings-row">
+          <div>
+            <label for="userName">Your alias:</label>
+            <input type="text" id="userName" maxlength="24" placeholder="Enter your name or alias" class="settings-input">
+            <label for="avatarUpload">Avatar:</label>
+            <img id="user-avatar" src="" alt="Avatar" style="display:none"/>
+            <input type="file" id="avatarUpload" accept="image/*" class="settings-input">
+            <button id="avatarBtn" class="ripple-btn settings-btn">Upload avatar</button>
+          </div>
+          <div>
+            <label>Theme:</label>
+            <select id="themePicker" class="settings-input">
+              <option value="light">Light</option>
+              <option value="dark">Dark</option>
+            </select>
+            <label for="currency">Default currency:</label>
+            <select id="currency" class="settings-input">
+              <option value="zł">PLN (zł)</option>
+              <option value="$">USD ($)</option>
+              <option value="€">EUR (€)</option>
+            </select>
+          </div>
+          <div>
+            <label>Your categories:</label>
+            <input type="text" id="newCat" placeholder="New category" maxlength="20" class="settings-input"/>
+            <button id="addCat" class="ripple-btn settings-btn">Add</button>
+            <ul id="catList"></ul>
+          </div>
+          <div>
+            <label>Set category limits:</label>
+            <ul id="limitList"></ul>
+            <div id="limitAlert" class="limit-alert" style="display:none"></div>
+          </div>
+        </div>
+        <button id="resetBtn" class="danger ripple-btn settings-btn">Reset all data</button>
+      </section>
+    </div>
+  </div>
+  <div id="editModal" class="modal"></div>
+  <div id="toast"></div>
+</div>
+<script src="main.js"></script>
+</body>
+</html>
