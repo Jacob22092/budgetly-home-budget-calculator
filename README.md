@@ -2,6 +2,8 @@
 
 **Budgetly** is a modern, user-friendly home budget calculator and expense manager. Track your income and expenses, set category limits, visualize your spending, and manage your finances with ease. The app features a visually appealing interface, supports dark mode, and stores all data locally in your browser.
 
+![Budgetly preview](https://i.imgur.com/zi1ElG8.png)
+
 ---
 
 ## Features
@@ -27,22 +29,9 @@
 
 ---
 
-## Branding
-
-> **Budgetly** – Simple. Visual. Personal.  
-> Manage your home budget with style.
-
----
-
 ## License
 
 MIT
-
----
-
-## Screenshots
-
-![Budgetly preview](https://img.icons8.com/cotton/64/money-bag.png)
 
 ---
 
